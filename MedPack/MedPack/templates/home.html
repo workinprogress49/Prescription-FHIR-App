@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Medication Home Page{% endblock %}
+
+{% block content %}
+
+	<link rel='stylesheet' type='text/css' ref="{% static 'datatables/datatables.min.css' %}"/>
+	<script type='text/javascript' src="{% static 'datatables/datatables.min.js' %}"></script>
+
+	<div class="tab">
+  		<button class="tablinks" onclick="openTab(event, 'Current')">Current</button>
+  		<button class="tablinks" onclick="openTab(event, 'History')">History</button>
+	</div>
+
+	<div id='Current' class='tabcontent'>
+		<table id = 'medication-table' class='display'>
+			<thead>
+				<tr>
+					<th>Medication Name</th>
+					<th>Start Date</th>
+					<th>Quantity</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+
+	<div id='History' class='tabcontent'>
+		<table id = 'medication-table2' class='display'>
+			<thead>
+				<tr>
+					<th>Medication Name</th>
+					<th>Start Date</th>
+					<th>Quantity</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+
+	<script src="{% static 'js/home-script.js' %}"></script>
+{% endblock %}
