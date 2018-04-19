@@ -27,8 +27,3 @@ allCells
   });
 
 
-$(document).ready(function() {
-    $('table.display').DataTable( {
-        paging: false
-        });
-} );

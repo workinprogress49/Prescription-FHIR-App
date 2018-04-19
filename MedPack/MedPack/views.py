@@ -8,16 +8,6 @@ import math
 import pandas as pd
 from datetime import datetime
 
-'''
-from django.http import HttpResponse
-import datetime
-
-def current_datetime(request):
-    now = datetime.datetime.now()
-    html = "<html><body>It is now %s.</body></html>" % now
-    return HttpResponse(html)
-'''
-
 
 def home(request):
 	return TemplateResponse(request, 'home.html', {})
@@ -27,37 +17,38 @@ def launch(request):
 
 @csrf_exempt
 def medications(request):
-	input = json.loads(request.body.decode('utf-8'))
+    #input = json.loads(request.body.decode('utf-8'))
+    input = json.loads(request.body)
+    #return HttpResponse(input, content_type='application/json')
 
-	print(input)
 
-	fhir_endpoint = input['baseURL']
+    fhir_endpoint = input['base_URL']
 
-	headers = {'Accept': 'application/json+fhir', 'Authorization': 'Bearer ' + input["token"]}
+    headers = {'Accept': 'application/json+fhir', 'Authorization': 'Bearer ' + input["token"]}
 
-	resource = "MedicationStatement"
-	parameters = {"patient": input["patient"]}
+    resource = "MedicationStatement"
+    parameters = {"patient": input["patient"]}
 
-	query_url = fhir_endpoint + '/' + resource
+    query_url = fhir_endpoint + '/' + resource
 
-	try:
-		r = requests.get(query_url, params=parameters, headers=headers)
-		if (r.status_code == 200):
-			data = r.json
-			output = []
+    try:
+    	r = requests.get(query_url, params=parameters, headers=headers)
+    	if (r.status_code == 200):
+    		data = r.json
+    		output = []
 
-			i = 0
-			while i < 10:
-				row = {'medication': 'Med' + str(i), 'start': 'Start' + str(i), 'quantity':'Quantity'+str(i)}
-				output.append(row)
-				i +=  1
+    		i = 0
+    		while i < 10:
+    			row = {'medication': 'Med' + str(i), 'start': 'Start' + str(i), 'quantity':'Quantity'+str(i)}
+    			output.append(row)
+    			i +=  1
 
-		else:
-			output = {'error': r.headers['Status']}
+    	else:
+    		output = {'error': r.headers['Status']}
 
-		return JsonResponse(output, safe=False)
+    	return JsonResponse(output, safe=False)
 
-	except:
-		e = traceback.format_exc()
-		data = {'error':str(e)}
-		return JsonResponse(e)
+    except:
+    	e = traceback.format_exc()
+    	data = {'error':str(e)}
+    	return JsonResponse(e)
