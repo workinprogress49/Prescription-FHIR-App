@@ -1,11 +1,11 @@
-function findAndRemove(array, property, value) {
-  array.forEach(function(result, index) {
-    if(result[property] != value) {
-      //Remove from array
-      array.splice(index, 1);
-    }
-  });
+Array.prototype.removeValue = function(name, value){
+   var array = $.map(this, function(v,i){
+      return v[name] != value ? null : v;
+   });
+   this.length = 0; //clear original array
+   this.push.apply(this, array); //push all elements except the one we want to delete
 }
+
 
 function get_medications(json_data) {
 	$.ajax({
@@ -33,7 +33,7 @@ function get_medications(json_data) {
 				]
 			});
 
-			findAndRemove(data,"Status","active")
+			data.removeValue('Status','active')
 
 			$('#medication-table').DataTable({
 				"data": data,
