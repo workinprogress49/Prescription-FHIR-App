@@ -42,20 +42,21 @@ def medications(request):
 
 
 			date_only = lambda x : x.split('T')[0] if x != 'N/A' else x
+			show_month = lambda x : datetime.strptime(x,'%Y-%m-%d').strftime('%Y-%B-%d') if x != 'N/A' else x
 
 			for i in range(len(data['entry'])):
 				flat_earth = flatten(data['entry'][i])
 				row = {
 					'Medication' : flat_earth.get('resource_medicationCodeableConcept_text','N/A'),
 					'Frequency' : flat_earth.get('resource_dosage_0_text','N/A'),
-					'Start Date' : date_only(flat_earth.get('resource_effectivePeriod_start','N/A')),
-					'End Date': date_only(flat_earth.get('resource_effectivePeriod_end','N/A')),
-					'Date Added' : date_only(flat_earth.get('resource_dateAsserted','N/A')),
+					'Start Date' : show_month(date_only(flat_earth.get('resource_effectivePeriod_start','N/A'))),
+					'End Date': show_month(date_only(flat_earth.get('resource_effectivePeriod_end','N/A'))),
+					'Date Added' : show_month(date_only(flat_earth.get('resource_dateAsserted','N/A'))),
 					'Status' : flat_earth.get('resource_status','N/A')
 					  }
 
 				if row['Start Date'] != 'N/A' and row['End Date'] != 'N/A':
-					row['Duration'] = str((datetime.strptime(row['End Date'], '%Y-%m-%d') - datetime.strptime(row['Start Date'], '%Y-%m-%d')).days) + ' days'
+					row['Duration'] = str((datetime.strptime(row['End Date'], '%Y-%B-%d') - datetime.strptime(row['Start Date'], '%Y-%B-%d')).days) + ' days'
 				else:
 					row['Duration'] = 'Ongoing'
 
